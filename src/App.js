@@ -1,5 +1,7 @@
 import logo from "./logo.svg";
 import "./App.css";
+import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
 
 function Header() {
   return (
@@ -25,6 +27,7 @@ function Nav(props) {
     </nav>
   );
 }
+
 function Article(props) {
   return (
     <article>
@@ -33,6 +36,7 @@ function Article(props) {
     </article>
   );
 }
+
 function App() {
   const topics = [
     { id: 1, title: "html", body: "very very! HTML is ..." },
@@ -43,6 +47,11 @@ function App() {
       <Header></Header>
       <Nav data={topics}></Nav>
       <Article title="Welcome!" body="Hello, WEB!"></Article>
+      <ButtonGroup>
+        <Button variant="outlined">Create</Button>
+        <Button variant="outlined">Update</Button>
+      </ButtonGroup>
+      <Button variant="outlined">Delete</Button>
     </div>
   );
 }
