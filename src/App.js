@@ -5,51 +5,44 @@ function Header() {
   return (
     <header>
       <h1>
-        <a href="/">Web</a>
+        <a href="/">WWW</a>
       </h1>
     </header>
   );
 }
-
-function Nav() {
+function Nav(props) {
+  const list = props.data.map((e) => {
+    return (
+      <li key={e.id}>
+        <a href={"/read/" + e.id}>{e.title}</a>
+        <div>{e.body}</div>
+      </li>
+    );
+  });
   return (
     <nav>
-      <ol>
-        <li>
-          <a href="/read/1">html</a>
-        </li>
-        <li>
-          <a href="/read/2">css</a>
-        </li>
-      </ol>
+      <ol>{list}</ol>
     </nav>
   );
 }
-function Article() {
+function Article(props) {
   return (
     <article>
-      <h2>Welcome</h2>
-      Hello, WEB!
+      <h2>{props.title}</h2>
+      {props.body}
     </article>
   );
 }
 function App() {
+  const topics = [
+    { id: 1, title: "html", body: "very very! HTML is ..." },
+    { id: 2, title: "css", body: "css is ..." },
+  ];
   return (
     <div>
       <Header></Header>
-      <Header></Header>
-      <Header></Header>
-      <Header></Header>
-
-      <Nav></Nav>
-      <Nav></Nav>
-      <Nav></Nav>
-      <Nav></Nav>
-
-      <Article></Article>
-      <Article></Article>
-      <Article></Article>
-      <Article></Article>
+      <Nav data={topics}></Nav>
+      <Article title="Welcome!" body="Hello, WEB!"></Article>
     </div>
   );
 }
