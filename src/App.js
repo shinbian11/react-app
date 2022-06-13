@@ -1,5 +1,6 @@
 import logo from "./logo.svg";
 import "./App.css";
+import styled from "styled-components";
 import { useState } from "react";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
@@ -10,14 +11,8 @@ function Header(props) {
   // Header의 onSelect 이벤트도 속성이 될 수 있다! 그러므로 props.onSelect 으로 접근이 가능한 것이다.
   // Javascript의 함수가 일급객체인 점을 이용해 props 객체에 함수도 담아서 넘겨줄 수 있다는 내용
 
-  const myStyle = {
-    borderBottom: "1px solid gray",
-    padding: "10px",
-    fontSize: "20px",
-  };
-
   return (
-    <header style={myStyle}>
+    <header className={props.className}>
       <h1>
         <a
           href="/"
@@ -33,6 +28,12 @@ function Header(props) {
     </header>
   );
 }
+
+const HeaderStyled = styled(Header)`
+    border-bottom = 1px solid gray;
+    color:red;
+`;
+
 function Nav(props) {
   const list = props.data.map((e) => {
     return (
@@ -69,15 +70,41 @@ function Article(props) {
 
 function createHandler() {}
 
+function Create(props) {
+  return (
+    <article>
+      <h2>Create</h2>
+      <form
+        onSubmit={(evt) => {
+          evt.preventDefault();
+          // alert("submit!");
+          const title = evt.target.title.value;
+          const body = evt.target.body.value;
+          props.onCreate(title, body);
+        }}
+      >
+        <p>
+          <input name="title" type="text" placeholder="title" />
+        </p>
+        <p>
+          <textarea name="body" placeholder="body"></textarea>
+        </p>
+        <p>
+          <input type="submit" value="Create" />
+        </p>
+      </form>
+    </article>
+  );
+}
+
 function App() {
-  // useState : 기본 값이 일단 WELCOME이다. state 참조(Read)하려면 첫번째 데이터를 이용, state를 바꿀 때는 두번째 데이터를 이용!
   const [mode, setMode] = useState("WELCOME");
   const [id, setId] = useState(null);
-  // console.log(mode, id);
-  const topics = [
+  const [nextId, setNextId] = useState(3);
+  const [topics, setTopics] = useState([
     { id: 1, title: "html", body: "very very! HTML is ..." },
     { id: 2, title: "css", body: "css is ..." },
-  ];
+  ]);
 
   let content = null;
   if (mode === "WELCOME") {
@@ -90,32 +117,43 @@ function App() {
         return false;
       }
     })[0];
-
-    // console.log("topic은? : ", topic);
     content = <Article title={topic.title} body={topic.body}></Article>;
+  } else if (mode === "CREATE") {
+    content = (
+      <Create
+        onCreate={(title, body) => {
+          const newTopic = { id: nextId, title, body };
+          topics.push(newTopic);
+        }}
+      ></Create>
+    );
   }
+
   return (
     <div>
-      <Header
+      <HeaderStyled
         onSelect={() => {
           // 모드의 값이 바뀌었을때, App 함수가 다시 호출된다. 그 return 값이 웹페이지에 반영되게 하고 싶다! ===> state의 개념 도입!
           // 중요 ***) 리액트에서 상태(state)는 값이 바뀌었을 때 컴포넌트를 다시 실행한다!!
           // mode = "WELCOME";
           setMode("WELCOME");
         }}
-      ></Header>
+      ></HeaderStyled>
       <Nav
         data={topics}
         onSelect={(id) => {
-          // alert("Nav! " + id);
-          // mode = "READ";
           setMode("READ");
           setId(id);
         }}
       ></Nav>
       {content}
       <ButtonGroup>
-        <Button variant="outlined" onClick={createHandler}>
+        <Button
+          variant="outlined"
+          onClick={() => {
+            setMode("CREATE");
+          }}
+        >
           Create
         </Button>
         <Button variant="outlined">Update</Button>
