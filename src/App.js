@@ -123,7 +123,15 @@ function App() {
       <Create
         onCreate={(title, body) => {
           const newTopic = { id: nextId, title, body };
-          topics.push(newTopic);
+
+          // topics.push(newTopic);
+          // setTopics(topics);
+          const newTopics = [...topics];
+          newTopics.push(newTopic);
+          setTopics(newTopics);
+          setId((current) => nextId);
+          setNextId((current) => nextId + 1);
+          setMode("READ");
         }}
       ></Create>
     );
