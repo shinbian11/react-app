@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
+import { Link } from "react-router-dom";
 
 function Header(props) {
   // console.log(props);
@@ -14,16 +15,14 @@ function Header(props) {
   return (
     <header className={props.className}>
       <h1>
-        <a
-          href="/"
-          onClick={(evt) => {
-            // console.log("evt : ", evt);
-            evt.preventDefault();
+        <Link
+          to="/"
+          onClick={() => {
             props.onSelect();
           }}
         >
           WWW
-        </a>
+        </Link>
       </h1>
     </header>
   );
@@ -39,15 +38,14 @@ function Nav(props) {
     return (
       // React 컴포넌트에서 최상단 요소에는 key 값을 주는 게 성능상 좋아서 보통 준다. (동적으로 변하는 애들은 추적이 쉽도록 key 값을 준다.)
       <li key={e.id}>
-        <a
-          href={"/read/" + e.id}
-          onClick={(evt) => {
-            evt.preventDefault();
+        <Link
+          to={"/read/" + e.id}
+          onClick={() => {
             props.onSelect(e.id);
           }}
         >
           {e.title}
-        </a>
+        </Link>
         <div>{e.body}</div>
       </li>
     );
@@ -157,6 +155,8 @@ function App() {
       {content}
       <ButtonGroup>
         <Button
+          component={Link}
+          to="/create"
           variant="outlined"
           onClick={() => {
             setMode("CREATE");
