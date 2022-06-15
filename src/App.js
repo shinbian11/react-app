@@ -96,7 +96,7 @@ function App() {
   function Read(props) {
     // Router시 url 경로에 가변적인 params가 있다면, 컴포넌트 내에서 useParams를 이용해 그 가변적인 params를 알 수 있다.
     const params = useParams();
-    const id = Number(params.topic_id);
+    const id = Number(params.topic_id); // 가져온 이 parameter는 문자열이다. 다른 형으로 변환하여 사용 할 수 있다.
     const topic = props.topics.filter((e) => {
       if (e.id === id) {
         return true;
