@@ -4,23 +4,31 @@ import styled from "styled-components";
 import { useState } from "react";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import { Link, Routes, Route, useParams } from "react-router-dom";
+import { Link, Routes, Route, useParams, useNavigate } from "react-router-dom";
 import { Header } from "./Header";
 import { Article } from "./Article";
 import { Nav } from "./Nav";
 import { Create } from "./Create";
 
 function createHandler() {}
-function Control() {
+function Control(props) {
   const params = useParams();
   const id = Number(params.topic_id);
   // console.log(id);
   let contextUI = null;
   if (id) {
+    // useParams 가 존재한다면 Update, Delete 버튼 띄우기
     contextUI = (
       <>
         <Button variant="outlined">Update</Button>
-        <Button variant="outlined">Delete</Button>
+        <Button
+          variant="outlined"
+          onClick={() => {
+            props.onDelete(id);
+          }}
+        >
+          Delete
+        </Button>
       </>
     );
   }
@@ -41,6 +49,9 @@ function App() {
     { id: 1, title: "html", body: "very very! HTML is ..." },
     { id: 2, title: "css", body: "css is ..." },
   ]);
+
+  // useNavigate() 가 만든 함수에 원하는 경로를 넣으면, 그 경로로 refresh 없이 이동한다!
+  const navigate = useNavigate();
 
   // 중요) 리액트에서 상태(state)는 값이 바뀌었을 때 컴포넌트를 다시 실행한다!!
   return (
@@ -65,24 +76,20 @@ function App() {
       <Routes>
         {["/", "/read/:topic_id", "/update/:topic_id"].map((path) => {
           return (
-            <Route key={path} path={path} element={<Control></Control>}></Route>
+            <Route
+              key={path}
+              path={path}
+              element={
+                <Control
+                  onDelete={(id) => {
+                    deleteHandler(id);
+                  }}
+                ></Control>
+              }
+            ></Route>
           );
         })}
       </Routes>
-
-      {/* <Button
-        component={Link}
-        to="/create"
-        variant="outlined"
-        onClick={createHandler()}
-      >
-        Create
-      </Button>
-      <Button variant="outlined">Update</Button>
-
-      <Button variant="outlined" onClick={deleteHandler()}>
-        Delete
-      </Button> */}
     </div>
   );
 
@@ -120,27 +127,25 @@ function App() {
     };
   }
 
-  function deleteHandler() {
-    return () => {
-      const newTopics = topics.filter((e) => {
-        if (e.id === id) return false;
-        return true;
-      });
+  function deleteHandler(id) {
+    const newTopics = topics.filter((e) => {
+      if (e.id === id) return false;
+      return true;
+    });
 
-      setTopics(newTopics);
-      setMode("WELCOME");
-    };
+    setTopics(newTopics);
+    navigate("/"); // '/' 링크로 refresh 없이 이동한다. (Javascript에서 window.location.href는 refresh를 하는데, 얘는 아니다!)
   }
 
   function createHandler() {
     return () => {
-      setMode("CREATE");
+      // setMode("CREATE");
     };
   }
 
   function headerHandler() {
     return () => {
-      setMode("WELCOME");
+      // setMode("WELCOME");
     };
   }
 }
