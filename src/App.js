@@ -11,7 +11,28 @@ import { Nav } from "./Nav";
 import { Create } from "./Create";
 
 function createHandler() {}
-
+function Control() {
+  const params = useParams();
+  const id = Number(params.topic_id);
+  // console.log(id);
+  let contextUI = null;
+  if (id) {
+    contextUI = (
+      <>
+        <Button variant="outlined">Update</Button>
+        <Button variant="outlined">Delete</Button>
+      </>
+    );
+  }
+  return (
+    <>
+      <Button component={Link} to="/create" variant="outlined">
+        Create
+      </Button>
+      {contextUI}
+    </>
+  );
+}
 function App() {
   const [mode, setMode] = useState("WELCOME"); // todo 삭제 예정
   const [id, setId] = useState(null); // todo 삭제 예정
@@ -40,20 +61,28 @@ function App() {
           element={<Read topics={topics}></Read>}
         ></Route>
       </Routes>
-      <ButtonGroup>
-        <Button
-          component={Link}
-          to="/create"
-          variant="outlined"
-          onClick={createHandler()}
-        >
-          Create
-        </Button>
-        <Button variant="outlined">Update</Button>
-      </ButtonGroup>
+
+      <Routes>
+        {["/", "/read/:topic_id", "/update/:topic_id"].map((path) => {
+          return (
+            <Route key={path} path={path} element={<Control></Control>}></Route>
+          );
+        })}
+      </Routes>
+
+      {/* <Button
+        component={Link}
+        to="/create"
+        variant="outlined"
+        onClick={createHandler()}
+      >
+        Create
+      </Button>
+      <Button variant="outlined">Update</Button>
+
       <Button variant="outlined" onClick={deleteHandler()}>
         Delete
-      </Button>
+      </Button> */}
     </div>
   );
 
